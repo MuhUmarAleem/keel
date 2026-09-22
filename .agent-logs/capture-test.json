@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "session": "2026-09-22T06-56-37-757Z",
+  "file": ".agent-logs/sessions/2026-09-22T06-56-37-757Z.jsonl",
+  "events": 4,
+  "types": [
+    "session_start",
+    "tool",
+    "prompt",
+    "response"
+  ],
+  "testedAt": "2026-09-22T06:56:38.029Z"
+}

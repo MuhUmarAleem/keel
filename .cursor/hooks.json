@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs sessionStart"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs sessionEnd"
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs beforeSubmitPrompt"
+      }
+    ],
+    "afterAgentResponse": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs afterAgentResponse"
+      }
+    ],
+    "afterAgentThought": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs afterAgentThought"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs afterFileEdit"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs afterShellExecution"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs afterMCPExecution"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/agent-log.cjs stop"
+      }
+    ]
+  }
+}
