@@ -87,3 +87,25 @@ export type UpcomingEvent = {
   attendees: string[];
   autoJoin: boolean;
 };
+
+export type SearchHit = {
+  meeting: Meeting;
+  score: number;
+  kind: "meeting" | "quote" | "action" | "highlight";
+  snippet: string;
+  start?: number;
+};
+
+export type AskCitation = {
+  meetingId: string;
+  meetingTitle: string;
+  start: number;
+  quote: string;
+  speaker: string;
+};
+
+export type AskAnswer = {
+  question: string;
+  answer: string;
+  citations: AskCitation[];
+};

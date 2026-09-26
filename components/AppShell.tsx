@@ -6,7 +6,7 @@ import { FormEvent, useState } from "react";
 
 const nav = [
   { href: "/", label: "Library" },
-  { href: "/ask/", label: "Ask Keel" },
+  { href: "/ask/", label: "Ask" },
   { href: "/calendar/", label: "Calendar" },
   { href: "/search/", label: "Search" },
 ];
@@ -25,19 +25,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   if (bare) {
-    return <div className="min-h-screen">{children}</div>;
+    return <div className="min-h-screen bg-ink text-paper">{children}</div>;
   }
 
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b border-[#243041]/80 bg-[#07080b]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-3 lg:flex-row lg:items-center">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#4aa3ff] text-[#07080b] font-semibold">
-                K
-              </span>
-              <span className="text-[15px] font-semibold tracking-tight">Keel</span>
+    <div className="min-h-screen bg-ink text-paper">
+      <header className="sticky top-0 z-30 border-b border-line bg-ink/95 backdrop-blur">
+        <div className="mx-auto flex max-w-[1120px] flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2 font-serif text-[22px] leading-none tracking-tight">
+              <svg viewBox="0 0 18 16" className="h-4 w-4" aria-hidden>
+                <rect x="1" y="6" width="3" height="8" fill="#C99A3C" />
+                <rect x="7" y="2" width="3" height="12" fill="#3E8C8A" />
+                <rect x="13" y="5" width="3" height="9" fill="#D4654A" />
+              </svg>
+              Keel
             </Link>
             <nav className="flex flex-wrap items-center gap-1">
               {nav.map((item) => {
@@ -49,10 +51,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`rounded-full px-3 py-1.5 text-[13px] ${
-                      active
-                        ? "bg-[#181f2a] text-white"
-                        : "text-[#8b97a8] hover:text-white"
+                    aria-current={active ? "page" : undefined}
+                    className={`rounded-full px-3 py-1 text-[14px] ${
+                      active ? "bg-cue text-ink" : "text-graphite hover:bg-[#1c2128] hover:text-paper"
                     }`}
                   >
                     {item.label}
@@ -60,29 +61,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 );
               })}
             </nav>
-            <span className="ml-auto grid h-8 w-8 place-items-center rounded-full bg-[#5B8CFF] text-[12px] font-semibold lg:hidden">
-              AC
-            </span>
           </div>
-          <form onSubmit={onSearch} className="flex min-w-0 flex-1">
+          <form onSubmit={onSearch} className="flex min-w-0 flex-1 gap-2">
             <input
               value={q}
               onChange={(event) => setQ(event.target.value)}
               placeholder="Search meetings, quotes, actions…"
-              className="w-full rounded-full border border-[#243041] bg-[#12171f] px-4 py-2 text-[13px] outline-none placeholder:text-[#667384] focus:border-[#4aa3ff]"
+              aria-label="Search meetings, quotes, actions"
+              className="w-full rounded-full border border-line bg-[#1a1f27] px-4 py-1.5 text-[14px] text-paper placeholder:text-graphite"
             />
+            <button className="rounded-full bg-tide px-4 py-1.5 text-[13px] font-medium text-paper">
+              Search
+            </button>
           </form>
-          <div className="hidden items-center gap-2 lg:flex">
-            <span className="rounded-full border border-[#243041] bg-[#12171f] px-2.5 py-1 text-[11px] text-[#8b97a8]">
-              Calendar connected
-            </span>
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-[#5B8CFF] text-[12px] font-semibold">
-              AC
-            </span>
-          </div>
+          <p className="hidden items-center gap-2 rounded-full bg-[#163330] px-3 py-1 text-[13px] text-[#7dccc9] lg:flex">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-tide" aria-hidden />
+            Calendar connected
+          </p>
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-5 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-[1120px] px-4 py-6 sm:px-6">{children}</main>
     </div>
   );
 }

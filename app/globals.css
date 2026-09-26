@@ -1,37 +1,33 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #07080b;
-  --bg-2: #0c1016;
-  --surface: #12171f;
-  --surface-2: #181f2a;
-  --line: #243041;
-  --text: #e8eef6;
-  --muted: #8b97a8;
-  --accent: #4aa3ff;
-  --accent-2: #7cc2ff;
-  --amber: #f5c16c;
-  --good: #5ee0a8;
-  --danger: #f97171;
+@theme {
+  --color-ink: #14171c;
+  --color-paper: #f7f4ec;
+  --color-graphite: #8a8f98;
+  --color-cue: #c99a3c;
+  --color-tide: #3e8c8a;
+  --color-coral: #d4654a;
+  --color-line: #2a2f38;
+  --color-rule: #d8d1c4;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), "Source Serif 4", Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 html,
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: #14171c;
+  color: #f7f4ec;
   min-height: 100%;
 }
 
 body {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  background-image:
-    radial-gradient(1200px 600px at 10% -10%, rgba(74, 163, 255, 0.12), transparent 50%),
-    radial-gradient(900px 500px at 90% 0%, rgba(245, 193, 108, 0.06), transparent 45%);
+  font-family: var(--font-sans);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2a3648 transparent;
+  scrollbar-color: #2a2f38 transparent;
 }
 
 a {
@@ -39,10 +35,43 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input {
   font: inherit;
 }
 
+:focus-visible {
+  outline: 2px solid #c99a3c;
+  outline-offset: 3px;
+}
+
 ::selection {
-  background: rgba(74, 163, 255, 0.35);
+  background: rgba(201, 154, 60, 0.28);
+}
+
+.tape-line {
+  border-left: 4px solid var(--speaker, #c99a3c);
+  border-radius: 0 10px 10px 0;
+  transition: background-color 160ms linear;
+}
+
+.tape-line[data-active="true"] {
+  background: color-mix(in srgb, var(--speaker, #c99a3c) 22%, #f7f4ec);
+}
+
+.check-box {
+  transition: background-color 140ms linear, border-color 140ms linear;
+}
+
+.check-box[data-checked="true"] {
+  background: #3e8c8a;
+  border-color: #3e8c8a;
+  color: #f7f4ec;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tape-line,
+  .check-box {
+    transition: none;
+  }
 }

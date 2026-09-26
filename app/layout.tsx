@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/AppShell";
 
 const sans = Geist({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-geist",
+});
+
+const serif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-source-serif",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-plex-mono",
 });
 
 export const metadata: Metadata = {
@@ -16,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={sans.variable}>
+    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
       <body>
         <AppShell>{children}</AppShell>
       </body>

@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { MeetingWorkspace } from "@/components/MeetingWorkspace";
-import { getMeeting, meetings } from "@/lib/meetings";
+import { LlmNotConfiguredError } from "@/lib/llm";
+import { hydratePeople } from "@/lib/people";
+import { ensureSummary } from "@/lib/summary";
+import { getMeeting, listPeople, meetingExists } from "@/lib/store";
 
-export function generateStaticParams() {
-  return meetings.map((meeting) => ({ id: meeting.id }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function MeetingPage({
   params,
@@ -12,7 +13,15 @@ export default async function MeetingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  if (!meetingExists(id)) notFound();
+  const people = listPeople();
+  hydratePeople(people);
+  try {
+    await ensureSummary(id);
+  } catch (error) {
+    if (!(error instanceof LlmNotConfiguredError)) console.error(error);
+  }
   const meeting = getMeeting(id);
   if (!meeting) notFound();
-  return <MeetingWorkspace meeting={meeting} />;
+  return <MeetingWorkspace meeting={meeting} people={people} />;
 }

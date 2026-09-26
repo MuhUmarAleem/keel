@@ -2,52 +2,70 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useState } from "react";
-import { formatClock } from "@/lib/format";
-import { searchMeetings } from "@/lib/query";
+import { Suspense, useEffect, useState } from "react";
+import { formatTape } from "@/lib/format";
+import type { SearchHit } from "@/lib/types";
 
 function SearchInner() {
   const params = useSearchParams();
   const initial = params.get("q") ?? "";
   const [q, setQ] = useState(initial);
-  const hits = useMemo(() => searchMeetings(q), [q]);
+  const [hits, setHits] = useState<SearchHit[]>([]);
+
+  useEffect(() => {
+    const query = q.trim();
+    if (!query) {
+      setHits([]);
+      return;
+    }
+    const controller = new AbortController();
+    fetch(`/api/search/?q=${encodeURIComponent(query)}`, { signal: controller.signal, cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error("search failed"))))
+      .then((data: { hits: SearchHit[] }) => setHits(data.hits ?? []))
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setHits([]);
+      });
+    return () => controller.abort();
+  }, [q]);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
-      <h1 className="text-[28px] font-semibold tracking-tight">Search the library</h1>
+    <div className="mx-auto max-w-3xl">
+      <h1 className="border-l-4 border-tide pl-3 font-serif text-[34px] leading-tight">Search the library</h1>
       <input
         value={q}
         onChange={(event) => setQ(event.target.value)}
         placeholder="Try pricing hold, Northwind bots, Helio promises…"
-        className="w-full rounded-2xl border border-[#243041] bg-[#12171f] px-4 py-3 text-[15px] outline-none focus:border-[#4aa3ff]"
+        aria-label="Search the library"
+        className="mt-6 w-full rounded-full border border-line bg-[#1a1f27] px-4 py-2 text-[15px] text-paper placeholder:text-graphite"
       />
-      <div className="flex flex-wrap gap-2 text-[12px]">
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
         {["pricing hold", "October 7", "bots", "Helio", "contractors"].map((chip) => (
           <button
             key={chip}
             onClick={() => setQ(chip)}
-            className="rounded-full bg-[#181f2a] px-3 py-1 text-[#8b97a8] hover:text-white"
+            className="rounded-full bg-[#1a1f27] px-3 py-1 text-[13px] text-graphite hover:text-paper"
           >
             {chip}
           </button>
         ))}
       </div>
-      <p className="text-[13px] text-[#8b97a8]">
+      <p className="mt-4 text-[13px] text-graphite">
         {q ? `${hits.length} hits` : "Type to search meetings, quotes, actions, and clips."}
       </p>
-      <div className="space-y-2">
+      <div className="mt-2 border-t border-line">
         {hits.map((hit, index) => (
           <Link
             key={`${hit.meeting.id}-${hit.kind}-${index}`}
             href={`/meetings/${hit.meeting.id}/${hit.start != null ? `?t=${hit.start}` : ""}`}
-            className="block rounded-2xl border border-[#243041] bg-[#12171f] p-4 hover:border-[#4aa3ff]"
+            className="block border-b border-line px-2 py-3 hover:bg-[#1c2430]"
           >
-            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[#8b97a8]">
+            <div className="flex items-center gap-3 text-[13px] text-graphite">
               <span>{hit.kind}</span>
-              {hit.start != null && <span>{formatClock(hit.start)}</span>}
+              {hit.start != null && <span className="font-mono text-[12px]">{formatTape(hit.start)}</span>}
             </div>
-            <p className="mt-1 text-[15px] font-medium">{hit.meeting.title}</p>
-            <p className="mt-1 text-[13px] leading-6 text-[#8b97a8]">{hit.snippet}</p>
+            <p className="mt-1 font-serif text-[18px]">{hit.meeting.title}</p>
+            <p className="mt-1 text-[13px] leading-6 text-graphite">{hit.snippet}</p>
           </Link>
         ))}
       </div>
